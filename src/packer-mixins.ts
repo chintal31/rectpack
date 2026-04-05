@@ -10,18 +10,10 @@ class PackerBBFMixin extends PackerOnline {
     let fit: [number, Bin][] = this._openBins.map((b) => [b.fitness(width, height), b]);
     fit = fit.filter(([fitness, _bin]) => fitness !== null);
 
-    try {
+    if (fit.length > 0) {
       const [, best_bin] = fit.reduce((min, current) => (firstItem(current) < firstItem(min) ? current : min));
       best_bin.addRect(width, height, rid);
       return true;
-    } catch (error) {
-      if (error instanceof TypeError && error.message.includes('Reduce of empty array with no initial value')) {
-        // console.log('Caught specific TypeError: Reduce of empty array with no initial value. No action needed.');
-      } else {
-        // Rethrow or handle other errors
-        console.error('Unexpected error:', error);
-        throw error;
-      }
     }
 
     // Try packing into a new open bin
